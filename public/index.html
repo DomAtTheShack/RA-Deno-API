@@ -1,40 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Deno 2 Web Server</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        color: #333;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
-      .container {
-        text-align: center;
-      }
-      h1 {
-        color: #4caf50;
-      }
-      p {
-        font-size: 1.2rem;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Welcome to Deno 2</h1>
-      <p>Your Deno 2 web server is up and running!</p>
-      <p>
-        Visit the <a href="/greet">/greet</a> endpoint to see a greeting
-        message.
-      </p>
-    </div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenStreetMap with Footer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body, html {
+      height: 100%;  /* Full height */
+      margin: 0;     /* Remove default margin */
+      display: flex;  /* Use flexbox for layout */
+      flex-direction: column; /* Stack elements vertically */
+    }
+    #header {
+      background-color: #000000; /* Header background color */
+      padding: 10px;             /* Padding for header */
+      display: flex;             /* Use flexbox for header layout */
+      align-items: center;       /* Center items vertically */
+      flex-shrink: 0;            /* Prevent header from shrinking */
+      position: relative;        /* Enable positioning for child elements */
+    }
+    #logo {
+      height: 50px;              /* Height for the logo */
+      margin-right: 50px;        /* Space to the right of the logo */
+    }
+    #header .static-label {
+      flex: 1;                   /* Take up remaining space */
+      text-align: center;        /* Center text in header */
+      color: aliceblue;          /* Text color for static label */
+    }
+    #map-container {
+      border: 2px solid #000000; /* Border for the map container */
+      padding: 10px;             /* Padding inside the container */
+      margin: 10px;              /* Margin around the container */
+      flex: 1;                   /* Take remaining space above footer */
+    }
+    #map {
+      height: 100%;              /* Full height for the map */
+    }
+    #footer {
+      background-color: black;   /* Footer background color */
+      color: white;              /* Footer text color */
+      text-align: center;        /* Center text in footer */
+      padding: 30px;             /* Padding for footer */
+      flex-shrink: 0;            /* Prevent footer from shrinking */
+    }
+    .dynamic-label {
+      font-size: 24px;           /* Font size for the labels */
+      text-align: center;        /* Center text in labels */
+      margin-bottom: 10px;       /* Space below labels */
+    }
+    .static-label {
+      font-size: 28px;           /* Font size for the static label */
+    }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <img id="logo" src="full-color.png" alt="Logo" style="scale: 2; position: relative; left: 15px;"> />
+  <div class="static-label" style="font-size: 80px">Where is Your RA?</div>
+</div>
+<div style="padding: 25px"></div>
+<div class="dynamic-label" id="label1" style="font-size: 40px">Label 1: Initial Value</div>
+<div class="dynamic-label" id="label2" style="font-size: 40px">Label 2: Initial Value</div>
+<div style="padding: 5px"></div>
+
+<div id="map-container">
+  <div id="map"></div>
+</div>
+
+<div id="footer" style="font-size: 30px">Call or Text at (586)-651-0994 or knock at anytime.</div>
+<script src="apiCalls.js"></script>
+
+<script>
+  var map = L.map('map').setView([37.7749, -122.4194], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var marker = L.marker([37.7749, -122.4194]).addTo(map);
+
+  // Function to update the map and labels
+  window.updateMap = function(coordinates, label1Text, label2Text, zoom) {
+    map.setView(coordinates, zoom); // Use the passed zoom level
+    document.getElementById('label1').innerText = label1Text;
+    document.getElementById('label2').innerText = label2Text;
+    marker.setLatLng(coordinates);
+  }
+
+  // Fetch data every second
+  setInterval(fetchData, 1000);
+</script>
+
+</body>
 </html>
